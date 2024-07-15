@@ -67,7 +67,7 @@ def ativar_conta(request, token):
 def logar(request):
   if request.method == 'GET':
     if request.user.is_authenticated:
-      return HttpResponse('Login feito com sucesso!') # Modificar (esse e o outro)
+      return redirect('/pacientes')
     return render(request, 'login.html')
   elif request.method == 'POST':
     usuario = request.POST.get('usuario')
@@ -80,12 +80,14 @@ def logar(request):
         messages.add_message(request, constants.WARNING, 'Esse usuário ainda não foi validado, verifique seu email e faça a validação para entrar!')
         return redirect('/auth/logar')
     except:
-      if not usuario_existe:
-        messages.add_message(request, constants.ERROR, 'Usuário ou senha inválido...tente novamente ou faça o cadastro!')
-        return redirect('/auth/logar')    
-    
+      pass
+
+    if not usuario_existe:
+      messages.add_message(request, constants.ERROR, 'Usuário ou senha inválido...tente novamente ou faça o cadastro!')
+      return redirect('/auth/logar')    
+
     auth.login(request, usuario_existe)
-    return HttpResponse('Login feito com sucesso!') # Modificar (esse e o outro)
+    return redirect('/pacientes')
   
 def sair(request):
   auth.logout(request)
