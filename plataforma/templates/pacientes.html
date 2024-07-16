@@ -20,7 +20,7 @@
         </div>
           
         <div class="modal-body">
-          <form action="{% url 'pacientes' %}" method="POST"> {% csrf_token %}
+          <form action="{% url 'gerenciar_pacientes' %}" method="POST"> {% csrf_token %}
             <div class="row">
               <div class="col-md-3">
                 <img src="{% static 'plataforma/img/perfil2.png' %}">

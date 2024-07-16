@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from .models import Pacientes
@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.contrib.messages import constants
 
 @login_required(login_url='/auth/logar')
-def pacientes(request):
+def gerenciar_pacientes(request):
   if request.method == 'GET':
     pacientes = Pacientes.objects.filter(nutri=request.user)
 
@@ -21,16 +21,16 @@ def pacientes(request):
 
     if (len(nome.strip())==0) or (len(sexo.strip())==0) or (len(idade.strip())==0) or (len(email.strip())==0) or (len(telefone.strip())==0):
       messages.add_message(request, constants.ERROR, 'Cadastro não realizado, todos os campos devem ser preenchidos!')
-      return redirect('/pacientes')
+      return redirect('/gerenciar_pacientes')
     
     if not idade.isnumeric():
       messages.add_message(request, constants.ERROR, 'Digite uma idade válida!')
-      return redirect('/pacientes')
+      return redirect('/gerenciar_pacientes')
     
     paciente_existe = Pacientes.objects.filter(email=email)
     if paciente_existe:
       messages.add_message(request, constants.ERROR, 'Já existe um paciente com esse email cadastrado no sistema!')
-      return redirect('/pacientes')
+      return redirect('/gerenciar_pacientes')
 
     try:
       paciente = Pacientes(
@@ -46,4 +46,22 @@ def pacientes(request):
     except:
       messages.add_message(request, constants.ERROR, 'Erro interno do sistema, tente novamente!')
 
-    return redirect('/pacientes')
+    return redirect('/gerenciar_pacientes')
+
+@login_required(login_url='/auth/logar')
+def lista_pacientes(request):
+  if request.method == 'GET':
+    pacientes = Pacientes.objects.filter(nutri=request.user)
+
+    return render(request, 'lista_pacientes.html', {'pacientes': pacientes})
+  
+@login_required(login_url='/auth/logar')
+def dados_paciente(request, paciente_id):
+  paciente = get_object_or_404(Pacientes, id=paciente_id)
+
+  if not paciente.nutri == request.user:
+    messages.add_message(request, constants.ERROR, 'Esse paciente não é seu!')
+    return redirect('/lista_pacientes')
+  
+  if request.method == 'GET':
+    return render(request, 'dados_paciente.html', {'paciente': paciente})
