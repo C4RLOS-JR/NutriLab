@@ -12,7 +12,7 @@ from hashlib import sha256
 def cadastro(request):
   if request.method == 'GET':
     if request.user.is_authenticated:
-      return HttpResponse('Login feito com sucesso!')
+      return redirect('/gerenciar_pacientes')
     return render(request, 'cadastro.html')
   elif request.method == 'POST':
     usuario = request.POST.get('usuario')
@@ -67,7 +67,7 @@ def ativar_conta(request, token):
 def logar(request):
   if request.method == 'GET':
     if request.user.is_authenticated:
-      return redirect('/pacientes')
+      return redirect('/gerenciar_pacientes')
     return render(request, 'login.html')
   elif request.method == 'POST':
     usuario = request.POST.get('usuario')
@@ -87,7 +87,7 @@ def logar(request):
       return redirect('/auth/logar')    
 
     auth.login(request, usuario_existe)
-    return redirect('/pacientes')
+    return redirect('/gerenciar_pacientes')
   
 def sair(request):
   auth.logout(request)

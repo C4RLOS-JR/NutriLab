@@ -15,7 +15,8 @@
     {% if user.is_authenticated %}
       <nav style="background-color: #27DB8F;" class="navbar navbar-expand-lg navbar-dark">
         <a style="font-weight: bold" class="navbar-brand" href="#">NUTRI LAB</a>
-        <h4 style="color: white;">{{user.username}}</h4>
+        <h4 style="color: white; display: inline; margin-left: 20px;">{{user.username}}</h4>
+        <a style="color: white; display: inline; margin-left: 20px;" href="{% url 'sair' %}">Sair</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button> 
