@@ -3,19 +3,10 @@
 
 {% block 'plataforma' %}
 
-  {% if messages %}
-    <br>
-    {% for message in messages %}
-      <div class="alert {{message.tags}}">
-        {{message}}
-      </div>
-    {% endfor %}
-  {% endif %}
   <br>
-
   <div class="row">
 
-    <div class="col-md-3">
+    <div class="col-md-2">
       {% if paciente.sexo == 'M' %}
         <img src="{% static 'plataforma/img/perfil2.png' %}">
       {% else %}
@@ -26,17 +17,22 @@
     <div class="col-md-3 dados descricao">
       <h4>{{paciente.nome}}</h4>
       <h6>{{paciente.idade}} Anos</h6>
+      <!--Botão Modal "Adicionar dados"-->
+      <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#modal">
+        Adicionar dados
+      </button>
     </div>
-      
   </div>
-  <hr>
 
-  <!--Botão Modal "Adicionar dados"-->
-  <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#modal">
-      Adicionar dados do paciente
-  </button>
+  {% if messages %}
+    <br>
+    {% for message in messages %}
+      <div class="alert {{message.tags}}">
+        {{message}}
+      </div>
+    {% endfor %}
+  {% endif %}
 
-  <br>
   <br>
   <table class="table table-striped">
     {% if dados %}
@@ -46,9 +42,10 @@
           <th scope="col">Altura</th>
           <th scope="col">Gordura(%)</th>
           <th scope="col">Músculo(%)</th>
-          <th scope="col">Data</th>
+          <th scope="col">Última medição</th>
         </tr>
       </thead>
+      
       <tbody>
         {% for dado in dados %}
           <tr>
@@ -71,6 +68,7 @@
       <div class="modal-content">
         
         <div class="modal-header">
+          <h3 class="modal-title">{{paciente.nome}}</h3>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>

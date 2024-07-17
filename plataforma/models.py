@@ -19,7 +19,7 @@ class Pacientes(models.Model):
 
 class DadosPaciente(models.Model):
   paciente = models.ForeignKey(Pacientes, on_delete=models.CASCADE)
-  data = models.DateTimeField()
+  data = models.DateField()
   peso = models.IntegerField()
   altura = models.IntegerField()
   percentual_gordura = models.IntegerField()
@@ -31,4 +31,4 @@ class DadosPaciente(models.Model):
   
 
   def __str__(self):
-    return f"Paciente({self.paciente.nome}, {self.data})"
+    return f"Paciente {self.paciente.nome} - {self.data}"

@@ -3,9 +3,10 @@
 
 {% block 'plataforma' %}
   <br>
+  <h1 class="titulo">Seus pacientes</h1>
   <!--Botão Modal "Novo Paciente"-->
   <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#modal">
-    Novo paciente
+    Adicionar paciente
   </button>
 
   <!--Modal "Novo Paciente"-->
@@ -92,8 +93,8 @@
                 {% endif %}
               </div>
               <br>
-              <p class="dados">Paciente: {{paciente.nome}}</p>
-              <p class="dados">Idade: {{paciente.idade}} anos</p>
+              <p class="dados">{{paciente.nome}}</p>
+              <p class="dados">{{paciente.idade}} anos</p>
             </div>
           </a>
         </div>

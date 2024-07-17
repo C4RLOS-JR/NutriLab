@@ -79,18 +79,18 @@ def dados_paciente(request, paciente_id):
 
     if ((len(peso.strip())==0) or (len(altura.strip())==0) or (len(gordura.strip())==0) or (len(musculo.strip())==0) or 
         (len(hdl.strip())==0) or (len(ldl.strip())==0) or (len(colesterol_total.strip())==0) or (len(triglicerídios.strip())==0)):
-      messages.add_message(request, constants.ERROR, 'Todos os campos devem ser preenchidos!')
+      messages.add_message(request, constants.ERROR, 'Dados não adicionados. Todos os campos devem ser preenchidos!')
       return redirect(f'/dados_paciente/{paciente_id}')
     
     if ((not peso.isnumeric()) or (not altura.isnumeric()) or (not gordura.isnumeric()) or (not musculo.isnumeric()) or 
             (not hdl.isnumeric()) or (not ldl.isnumeric()) or (not colesterol_total.isnumeric()) or (not triglicerídios.isnumeric())):
-      messages.add_message(request, constants.ERROR, 'Os dados precisam ser numéricos!')
+      messages.add_message(request, constants.ERROR, 'Dados não adicionados. Os dados precisam ser numéricos!')
       return redirect(f'/dados_paciente/{paciente_id}')
 
     try:
       dados_paciente = DadosPaciente(
         paciente = paciente,
-        data = datetime.now(),
+        data = datetime.now().date(),
         peso = peso,
         altura = altura,
         percentual_gordura = gordura,
@@ -103,6 +103,6 @@ def dados_paciente(request, paciente_id):
       dados_paciente.save()
       messages.add_message(request, constants.SUCCESS, 'Dados cadastrados com sucesso!')
     except:
-      messages.add_message(request, constants.ERROR, 'Algo deu errado, tente novamente!')
+      messages.add_message(request, constants.ERROR, 'Algo deu errado, tente novamente ou entre em contato com a administração!')
 
     return redirect(f'/dados_paciente/{paciente_id}')
