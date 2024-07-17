@@ -39,23 +39,30 @@
   <br>
   <br>
   <table class="table table-striped">
-    <thead>
-      <tr>
-      <th scope="col">Peso</th>
-      <th scope="col">Altura</th>
-      <th scope="col">Gordura(%)</th>
-      <th scope="col">Músculo(%)</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th scope="row">58 Kg</th>
-        <td>173 cm</td>
-        <td>19%</td>
-        <td>25%</td>
-      </tr>
-        
-    </tbody>
+    {% if dados %}
+      <thead>
+        <tr>
+          <th scope="col">Peso</th>
+          <th scope="col">Altura</th>
+          <th scope="col">Gordura(%)</th>
+          <th scope="col">Músculo(%)</th>
+          <th scope="col">Data</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for dado in dados %}
+          <tr>
+            <th scope="row">{{dado.peso}} Kg</th>
+            <td>{{dado.altura}} cm</td>
+            <td>{{dado.percentual_gordura}}%</td>
+            <td>{{dado.percentual_musculo}}%</td>
+            <td>{{dado.data}}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    {% else %}
+      <label>Ainda não possui dados, adicione dados ao paciente</label>
+    {% endif %}
   </table>
   
   <!--Modal "Adicionar dados"-->

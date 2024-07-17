@@ -1,15 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import Pacientes
+from .models import Pacientes, DadosPaciente
 from django.contrib import messages
 from django.contrib.messages import constants
+from datetime import datetime
 
 @login_required(login_url='/auth/logar')
 def gerenciar_pacientes(request):
   if request.method == 'GET':
     pacientes = Pacientes.objects.filter(nutri=request.user)
-
     return render(request, 'pacientes.html', {'pacientes': pacientes})
   
   elif request.method == 'POST':
@@ -52,7 +52,6 @@ def gerenciar_pacientes(request):
 def lista_pacientes(request):
   if request.method == 'GET':
     pacientes = Pacientes.objects.filter(nutri=request.user)
-
     return render(request, 'lista_pacientes.html', {'pacientes': pacientes})
   
 @login_required(login_url='/auth/logar')
@@ -64,7 +63,9 @@ def dados_paciente(request, paciente_id):
     return redirect('/lista_pacientes')
   
   if request.method == 'GET':
-    return render(request, 'dados_paciente.html', {'paciente': paciente})
+    dados = DadosPaciente.objects.filter(paciente_id=paciente_id)
+    
+    return render(request, 'dados_paciente.html', {'paciente': paciente, 'dados': dados})
   elif request.method == "POST":
     peso = request.POST.get('peso')
     altura = request.POST.get('altura')
@@ -75,5 +76,33 @@ def dados_paciente(request, paciente_id):
     ldl = request.POST.get('ldl')
     colesterol_total = request.POST.get('ctotal')
     triglicerídios = request.POST.get('triglicerídios')
+
+    if ((len(peso.strip())==0) or (len(altura.strip())==0) or (len(gordura.strip())==0) or (len(musculo.strip())==0) or 
+        (len(hdl.strip())==0) or (len(ldl.strip())==0) or (len(colesterol_total.strip())==0) or (len(triglicerídios.strip())==0)):
+      messages.add_message(request, constants.ERROR, 'Todos os campos devem ser preenchidos!')
+      return redirect(f'/dados_paciente/{paciente_id}')
     
-    return redirect('/dados_paciente/')
+    if ((not peso.isnumeric()) or (not altura.isnumeric()) or (not gordura.isnumeric()) or (not musculo.isnumeric()) or 
+            (not hdl.isnumeric()) or (not ldl.isnumeric()) or (not colesterol_total.isnumeric()) or (not triglicerídios.isnumeric())):
+      messages.add_message(request, constants.ERROR, 'Os dados precisam ser numéricos!')
+      return redirect(f'/dados_paciente/{paciente_id}')
+
+    try:
+      dados_paciente = DadosPaciente(
+        paciente = paciente,
+        data = datetime.now(),
+        peso = peso,
+        altura = altura,
+        percentual_gordura = gordura,
+        percentual_musculo = musculo,
+        colesterol_hdl = hdl,
+        colesterol_ldl = ldl,
+        colesterol_total = colesterol_total,
+        trigliceridios = triglicerídios
+      )
+      dados_paciente.save()
+      messages.add_message(request, constants.SUCCESS, 'Dados cadastrados com sucesso!')
+    except:
+      messages.add_message(request, constants.ERROR, 'Algo deu errado, tente novamente!')
+
+    return redirect(f'/dados_paciente/{paciente_id}')
