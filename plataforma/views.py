@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from .models import Pacientes, DadosPaciente
 from django.contrib import messages
 from django.contrib.messages import constants
@@ -63,8 +64,7 @@ def dados_paciente(request, paciente_id):
     return redirect('/lista_pacientes')
   
   if request.method == 'GET':
-    dados = DadosPaciente.objects.filter(paciente_id=paciente_id)
-    
+    dados = DadosPaciente.objects.filter(paciente=paciente)
     return render(request, 'dados_paciente.html', {'paciente': paciente, 'dados': dados})
   elif request.method == "POST":
     peso = request.POST.get('peso')
@@ -106,3 +106,16 @@ def dados_paciente(request, paciente_id):
       messages.add_message(request, constants.ERROR, 'Algo deu errado, tente novamente ou entre em contato com a administração!')
 
     return redirect(f'/dados_paciente/{paciente_id}')
+  
+@login_required(login_url='/auth/logar')
+@csrf_exempt
+def grafico_peso(request, paciente_id):
+  paciente = Pacientes.objects.get(id=paciente_id)
+  dados = DadosPaciente.objects.filter(paciente=paciente).order_by('data')
+
+  pesos = [dado.peso for dado in dados] # Armazena na variável 'pesos' somente os dados de peso do paciente.
+  labels = list(range(len(pesos)))  # Armazena na variável 'labels' uma lista numérica conforme a qnt de dados de 'pesos'.
+  data = {'peso': pesos,
+          'medicao': labels}
+  
+  return JsonResponse(data)
