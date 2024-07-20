@@ -6,6 +6,7 @@ from .models import Opcao, Pacientes, DadosPaciente, Refeicao
 from django.contrib import messages
 from django.contrib.messages import constants
 from datetime import datetime
+from nutrilab.settings import BASE_DIR
 
 @login_required(login_url='/auth/logar')
 def gerenciar_pacientes(request):
@@ -170,6 +171,18 @@ def refeicao(request, paciente_id):
 
     return redirect(f'/plano_alimentar/{paciente_id}')
   
+
+
+def excluir_refeicao(request, refeicao_id):
+  refeicao = Refeicao.objects.get(id=refeicao_id)
+
+  if not refeicao.paciente.nutri == request.user:
+    return redirect(f'/plano_alimentar/{refeicao.paciente_id}')
+  refeicao.delete()
+
+  return redirect(f'/plano_alimentar/{refeicao.paciente_id}')
+
+  
 def opcao(request, paciente_id):
   paciente = get_object_or_404(Pacientes, id=paciente_id)
   if not paciente.nutri == request.user:
@@ -182,6 +195,9 @@ def opcao(request, paciente_id):
       imagem = request.FILES.get('imagem')
       descricao = request.POST.get('descricao')
 
+      if not imagem:
+        imagem = "default/Default.png"
+
       opcao = Opcao(
         refeicao_id = id_refeicao,
         imagem = imagem,
@@ -193,3 +209,16 @@ def opcao(request, paciente_id):
       messages.add_message(request, constants.ERROR, 'Algo deu errado, tente novamente ou entre em contato com a administração!')
 
     return redirect(f'/plano_alimentar/{paciente_id}')
+  
+def excluir_opcao(request, opcao_id):
+  opcao = Opcao.objects.get(id=opcao_id)
+
+  if not opcao.refeicao.paciente.nutri == request.user:
+    return redirect(f'/plano_alimentar/{opcao.refeicao.paciente_id}')
+  
+  # Deleta a imagem(se não for a "Default.png").
+  if not opcao.imagem == ("default/Default.png"):
+    opcao.imagem.delete()
+  opcao.delete()
+
+  return redirect(f'/plano_alimentar/{opcao.refeicao.paciente_id}')

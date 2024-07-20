@@ -16,14 +16,11 @@
       {% endif %}
     </div>
 
-    <div class="col-md-3 dados descricao">
+    <div class="col-md-2 dados descricao">
       <h4>{{paciente.nome}}</h4>
       <h6>{{paciente.idade}} Anos</h6>
-      <!--Botão Modal "Nova Refeição"-->
-      <button type="button" onclick="exibe_refeicao()" class="btn btn-outline-success" data-toggle="modal" data-target="#modal">
-        + Nova refeição
-      </button>
     </div>
+
   </div>
   
   {% if messages %}
@@ -36,9 +33,22 @@
   {% endif %}
   <hr>
 
+  <!--Botão Modal "Nova Refeição"-->
+    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#novaRefeicaoModal">
+      Nova refeição
+    </button>
+
   {% if refeicoes %}
-    <button type="button" class="btn btn-outline-primary">
-      Exportar refeição
+
+
+
+    <!-- Botão Modal "Opção" -->
+    <button style="margin-left: 10px;" type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#novaOpcaoModal">
+      Opção de refeição
+    </button>
+
+    <button style="margin-left: 10px;" type="button" class="btn btn-outline-primary">
+      Exportar Plano de Alimentação
     </button>
     <br>
     <br>
@@ -49,14 +59,17 @@
 
           <div class="head-refeicao">
             <span>{{refeicao.titulo}}</span>
-            <span style="float: right;">{{refeicao.horario}}</span>
+            <span> - </span>
+            <span>{{refeicao.horario}}</span>
+            
+            <!-- Botão "Excluir Refeição" -->
+            <a href="{% url 'excluir_refeicao' refeicao.id %}" style="float: right; color: black;" type="button" class="close">
+              <span aria-hidden="true">&times;</span>
+            </a>
           </div>
 
-          {% if opcoes %}
             <div class="body-refeicao">
-              <h5>Opções:</h5>
               {% for opcao in opcoes %}
-
                 {% if opcao.refeicao == refeicao %}
                   <div class="opcao">
                     <div class="row">
@@ -65,27 +78,33 @@
                         <img width="100%" src="{{opcao.imagem.url}}"> 
                       </div>
                           
-                      <div class="col-md-15">
+                      <div class="col-md-10">
                         {{opcao.descricao}}
+                      </div>
+
+                      <!-- Botão "Excluir Opção" -->
+                      <div class="col-md-1">
+                        <a href="{% url 'excluir_opcao' opcao.id %}" class="btn btn-danger">Excluir</a>
                       </div>
                       
                     </div>
                   </div>
+                  <br>
                 {% endif %}
-                  
               {% endfor %}
             </div>
-          {% endif %}
-
+            
         </div>
       </div>
     {% endfor %}
   {% else %}
+  <br>
+  <br>
     <label>Esse paciente ainda não possui plano de alimentação, cadastre uma nova refeição!</label>
   {% endif %}
 
-  <!--Modal "Nova Refeição"-->
-  <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <!-- Modal "Nova Refeição" -->
+  <div class="modal fade" id="novaRefeicaoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -97,20 +116,10 @@
           
         <div class="modal-body">
             
-          <h4 class="titulo">Adicionar refeição</h4>
-
-          <button type="button" onclick="exibe_refeicao()" class="btn btn-outline-success">
-            + Nova refeição
-          </button>
-
-          <button style="margin-left: 10px;" onclick="exibe_opcao()" type="button" class="btn btn-outline-success" >
-            + Nova opção
-          </button>
+          <h4 class="titulo">Adicionar refeição:</h4>
           <br>
-          <br>
-
-          <!--Formulário "Nova Refeição"-->
-          <div id="form-refeicao" style="display: block;">
+          <!-- Formulário "Nova Refeição" -->
+          <div id="form-refeicao">
             <form action="{% url 'refeicao' paciente.id %}" method="POST"> {% csrf_token %}
               <label for="validationServerUsername">Título</label>
               <div class="input-group">
@@ -155,8 +164,29 @@
             </form>
           </div>
 
-          <!--Formulário "Nova Opção"-->
-          <div id="form-opcao" style="display: none;">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal "Nova Opção" -->
+  <div class="modal fade" id="novaOpcaoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">{{paciente.nome}}</h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+          
+        <div class="modal-body">
+            
+          <h4 class="titulo">Adicionar opção de refeição:</h4>
+          <br>
+
+          <!-- Formulário "Nova Opção" -->
+          <div id="form-opcao">
             <form action="{% url 'opcao' paciente.id %}" method="POST" enctype='multipart/form-data'>{% csrf_token %}
 
               <label for="validationServerUsername">Selecione a refeição</label>
@@ -171,7 +201,7 @@
 
               <label for="validationServerUsername">Imagem</label>
               <div class="input-group">
-                <input type="file" class="form-control" placeholder="" name="imagem">
+                <input style="border: none;" type="file" class="form-control" placeholder="" name="imagem">
               </div>
               <br>
 
@@ -188,6 +218,9 @@
       </div>
     </div>
   </div>
+
+
+
 
 
   <script>

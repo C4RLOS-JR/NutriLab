@@ -1,6 +1,4 @@
 venv
 *.pyc
 *.sqlite3
-opcao/
-media
-media/opcao/
+medi
