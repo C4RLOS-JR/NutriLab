@@ -52,21 +52,30 @@
             <span style="float: right;">{{refeicao.horario}}</span>
           </div>
 
-          <div class="body-refeicao">
-            <div class="opcao">
-              <div class="row">
+          {% if opcoes %}
+            <div class="body-refeicao">
+              <h5>Opções:</h5>
+              {% for opcao in opcoes %}
 
-                <div class="col-md-2">
-                  <img width="100%" src="{% static 'plataforma/img/perfil1.png' %}"> 
-                </div>
-
-                <div class="col-md-10">
-                  Teste 2
-                </div>
-                
-              </div>
+                {% if opcao.refeicao == refeicao %}
+                  <div class="opcao">
+                    <div class="row">
+                  
+                      <div class="col-md-1">
+                        <img width="100%" src="{{opcao.imagem.url}}"> 
+                      </div>
+                          
+                      <div class="col-md-15">
+                        {{opcao.descricao}}
+                      </div>
+                      
+                    </div>
+                  </div>
+                {% endif %}
+                  
+              {% endfor %}
             </div>
-          </div>
+          {% endif %}
 
         </div>
       </div>
