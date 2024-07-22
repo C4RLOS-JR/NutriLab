@@ -67,17 +67,17 @@
                   <div class="opcao">
                     <div class="row">
                       
-                      <div class="col-md-1">
-                        <img width="100%" src="{{opcao.imagem.url}}"> 
+                      <div class="col-md-2">
+                        <img width="80%" src="{{opcao.imagem.url}}"> 
                       </div>
                       
-                      <div class="col-md-10">
+                      <div style="text-align: left;" class="col-md-8">
                         {{opcao.descricao}}
                       </div>
                       
                       <!-- Botão "Excluir Opção" -->
-                      <div class="col-md-1">
-                        <a href="{% url 'excluir_opcao' opcao.id %}" class="btn btn-danger">Excluir</a>
+                      <div style="text-align: right; padding-right: 15px;" class="col-md-2">
+                        <a style="display: float;" href="{% url 'excluir_opcao' opcao.id %}" class="btn btn-danger">Excluir</a>
                       </div>
                       
                     </div>

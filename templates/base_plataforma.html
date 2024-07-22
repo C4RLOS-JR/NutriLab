@@ -21,7 +21,7 @@
           </div>
         </a>
 
-        <a href="{% url 'lista_pacientes' %}" class="link-lateral">
+        <a href="{% url 'lista_dados_paciente' %}" class="link-lateral">
           <div class="card-lateral">
             <img src="{% static 'plataforma/img/dados_paciente.png' %}">
             <br>
@@ -39,7 +39,7 @@
       </div>
       
       <!--Painel-->
-      <div class="col-md-8">
+      <div class="col-md-10">
         {% block 'plataforma' %}{% endblock %}
       </div>
 

@@ -49,12 +49,24 @@ def gerenciar_pacientes(request):
       messages.add_message(request, constants.ERROR, 'Erro interno do sistema, tente novamente!')
 
     return redirect('/gerenciar_pacientes')
+  
+def alterar_paciente(request, paciente_id):
+  paciente = get_object_or_404(Pacientes, id=paciente_id)
+
+  if not paciente.nutri == request.user:
+    messages.add_message(request, constants.ERROR, 'Esse paciente não é seu!')
+    return redirect('/lista_pacientes')
+  
+  if request.method == 'GET':
+    
+
+
 
 @login_required(login_url='/auth/logar')
-def lista_pacientes(request):
+def lista_dados_paciente(request):
   if request.method == 'GET':
     pacientes = Pacientes.objects.filter(nutri=request.user)
-    return render(request, 'lista_pacientes.html', {'pacientes': pacientes})
+    return render(request, 'lista_dados_paciente.html', {'pacientes': pacientes})
   
 @login_required(login_url='/auth/logar')
 def dados_paciente(request, paciente_id):
