@@ -10,7 +10,7 @@
   <br>
   <div class="row">
 
-    <div class="col-md-2">
+    <div class="col-md-2 foto-perfil">
       {% if paciente.sexo == 'M' %}
         <img src="{% static 'plataforma/img/perfil2.png' %}">
       {% else %}
@@ -18,7 +18,7 @@
       {% endif %}
     </div>
 
-    <div class="col-md-3 dados descricao">
+    <div class="col-md-4 dados-descricao">
       <h4>{{paciente.nome}}</h4>
       <h6>{{paciente.idade}} Anos</h6>
       <!--Botão Modal "Adicionar dados"-->
@@ -29,30 +29,32 @@
 
   </div>
 
-  {% if messages %}
-    <br>
-    {% for message in messages %}
-      <div class="alert {{message.tags}}">
-        {{message}}
-      </div>
-    {% endfor %}
-  {% endif %}
-
-  {% if dados %}
-    <br>
-    <table class="table table-striped">
-        <thead>
-          <tr>
-            <th scope="col">Peso</th>
-            <th scope="col">Altura</th>
-            <th scope="col">Gordura(%)</th>
-            <th scope="col">Músculo(%)</th>
-            <th scope="col">Última medição</th>
-          </tr>
-        </thead>
-        
-        <tbody>
-          {% for dado in dados %}
+  <div class="painel">
+    {% if messages %}
+      <br>
+      {% for message in messages %}
+        <div class="alert {{message.tags}}">
+          {{message}}
+        </div>
+      {% endfor %}
+    {% endif %}
+    
+    {% if dados %}
+        <hr>
+      <div class="fundo-alimentar">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Peso</th>
+              <th scope="col">Altura</th>
+              <th scope="col">Gordura(%)</th>
+              <th scope="col">Músculo(%)</th>
+              <th scope="col">Última medição</th>
+            </tr>
+          </thead>
+          
+          <tbody>
+            {% for dado in dados %}
             <tr>
               <th scope="row">{{dado.peso}} Kg</th>
               <td>{{dado.altura}} cm</td>
@@ -60,51 +62,53 @@
               <td>{{dado.percentual_musculo}}%</td>
               <td>{{dado.data}}</td>
             </tr>
-          {% endfor %}
-        </tbody>
-    </table>
-
-    <div style="width: 60%">
-      <canvas id="myChart"></canvas>
-    </div>
-
-    <!--Gráfico-->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-
-      fetch("/grafico_peso/{{paciente.id}}/",{
-        method: 'POST',
-      }).then(function(result){
-        return result.json()
-      }).then(function(data_paciente){
-        const data = {
-          labels: data_paciente['medicao'],
-          datasets: [{
-          label: 'Peso paciente',
-          backgroundColor: 'rgb(255, 99, 132)',
-          borderColor: 'rgb(255, 99, 132)',
-          data: data_paciente['peso'],
-          }]
-        };
-
-        const config = {
-          type: 'line',
-          data: data,
-          options: {}
-        };
-
-        const myChart = new Chart(
-          document.getElementById('myChart'),
-          config
-        );
-      })
-
-    </script>
-
-  {% else %}
-    <hr>
-    <label>Esse paciente ainda não possui dados, adicione dados ao paciente</label>
-  {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
+        
+        <div style="width: 60%">
+          <canvas id="myChart"></canvas>
+        </div>
+        
+        <!--Gráfico-->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+          
+          fetch("/grafico_peso/{{paciente.id}}/",{
+            method: 'POST',
+          }).then(function(result){
+            return result.json()
+          }).then(function(data_paciente){
+            const data = {
+              labels: data_paciente['medicao'],
+              datasets: [{
+                label: 'Peso paciente',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: data_paciente['peso'],
+              }]
+            };
+            
+            const config = {
+              type: 'line',
+              data: data,
+              options: {}
+            };
+            
+            const myChart = new Chart(
+              document.getElementById('myChart'),
+              config
+              );
+            })
+            
+          </script>
+          
+        </div>
+    {% else %}
+      <hr>
+      <label>Esse paciente ainda não possui dados, adicione dados ao paciente!</label>
+    {% endif %}
+  </div>
   
   <!--Modal "Adicionar dados"-->
   <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

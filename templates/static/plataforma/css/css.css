@@ -23,16 +23,13 @@
   background-color: #EAEAEA;
   width: 80%;
   box-shadow: 3px 3px 3px gray;
-  padding: 20px;
+  padding: 10px;
   color: black;
+  text-align: center;
 }
 
 .link-hover:hover {
   text-decoration: none;
-}
-
-.foto-perfil {
-  text-align: center;
 }
 
 .dados {
@@ -53,4 +50,13 @@
 table {
   text-align: center;
   vertical-align: middle;
+  border: 1px solid rgb(212, 212, 212);
+}
+
+.painel {
+  margin-left: 2%;
+}
+
+.dados-descricao {
+  margin-top: 20px;
 }

@@ -1,5 +1,6 @@
 .fundo-alimentar {
   padding: 20px;
+  padding-bottom: 0%;
 }
 
 .refeicao {
@@ -14,7 +15,8 @@
 
 .body-refeicao {
   background-color: #D9D9D9;
-  padding: 15px;
+  padding: 20px;
+  padding-bottom: 0px;
   font-weight: bold;
 }
 

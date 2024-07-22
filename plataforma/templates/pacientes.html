@@ -83,8 +83,8 @@
   <div  class="row">
     {% if pacientes %}
       {% for paciente in pacientes %}
-        <div class="col-md-4">
-          <a href="#" class="link-hover">
+        <div class="col-md-3">
+          <card class="link-hover">
             <div class="card-paciente">
               <div class="foto-perfil">
                 {% if paciente.sexo == 'M' %}
@@ -94,10 +94,18 @@
                 {% endif %}
               </div>
               <br>
-              <p class="dados">{{paciente.nome}}</p>
-              <p class="dados">{{paciente.idade}} anos</p>
+
+              <div>
+                <p class="dados">{{paciente.nome}}</p>
+                <p class="dados">{{paciente.idade}} anos</p>
+              </div>
+
+              <div>
+                <a href="#" class="btn btn-outline-primary">Alterar</a>
+                <a href="#" class="btn btn-outline-danger">Excluir</a>
+              </div>
             </div>
-          </a>
+          </card>
         </div>
       {% endfor %}
     {% endif %}

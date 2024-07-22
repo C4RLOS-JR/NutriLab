@@ -5,7 +5,7 @@
   <br>
   <div class="row">
 
-    <div class="col-md-2">
+    <div class="col-md-2 foto-perfil">
       {% if paciente.sexo == "M"%}
         <img src="{% static 'plataforma/img/perfil2.png' %}">
       {% else %}
@@ -13,69 +13,68 @@
       {% endif %}
     </div>
 
-    <div class="col-md-2 dados descricao">
+    <div class="col-md-3 dados-descricao">
       <h4>{{paciente.nome}}</h4>
       <h6>{{paciente.idade}} Anos</h6>
+      <!--Botão Modal "Nova Refeição"-->
+      <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#novaRefeicaoModal">
+        Nova refeição
+      </button>
     </div>
 
   </div>
   
-  {% if messages %}
-    <br>
-    {% for message in messages %}
-      <div class="alert {{message.tags}}">
-        {{message}}
-      </div>
-    {% endfor %}
-  {% endif %}
-  <hr>
-
-  <!--Botão Modal "Nova Refeição"-->
-    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#novaRefeicaoModal">
-      Nova refeição
-    </button>
-
-  {% if refeicoes %}
-    <!-- Botão Modal "Opção" -->
-    <button style="margin-left: 10px;" type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#novaOpcaoModal">
-      Opção de refeição
-    </button>
-
-    <button style="margin-left: 10px;" type="button" class="btn btn-outline-primary">
-      Exportar Plano de Alimentação
-    </button>
-    <br>
-    <br>
-
-    {% for refeicao in refeicoes %}
-      <div class="fundo-alimentar">
-        <div class="refeicao">
-
-          <div class="head-refeicao">
-            <span>{{refeicao.titulo}}</span>
-            <span> - </span>
-            <span>{{refeicao.horario}}</span>
+  <div class="painel">
+    {% if messages %}
+      <br>
+      {% for message in messages %}
+        <div class="alert {{message.tags}}">
+          {{message}}
+        </div>
+      {% endfor %}
+    {% endif %}
+    <hr>
+    
+    {% if refeicoes %}
+      <!-- Botão Modal "Opção" -->
+      <button style="margin-left: 10px;" type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#novaOpcaoModal">
+        Opção de refeição
+      </button>
+      
+      <button style="margin-left: 10px;" type="button" class="btn btn-outline-primary">
+        Exportar Plano de Alimentação
+      </button>
+      <br>
+      
+      {% for refeicao in refeicoes %}
+        <div class="fundo-alimentar">
+          <div class="refeicao">
             
-            <!-- Botão "Excluir Refeição" -->
-            <a href="{% url 'excluir_refeicao' refeicao.id %}" style="float: right; color: black;" type="button" class="close">
-              <span aria-hidden="true">&times;</span>
-            </a>
-          </div>
-
+            <div class="head-refeicao">
+              <span>{{refeicao.titulo}}</span>
+              <span> - </span>
+              <span>{{refeicao.horario}}</span>
+              
+              <!-- Botão "Excluir Refeição" -->
+              <a href="{% url 'excluir_refeicao' refeicao.id %}" style="float: right; color: black;" type="button" class="close">
+                <span aria-hidden="true">&times;</span>
+              </a>
+            </div>
+            
             <div class="body-refeicao">
               {% for opcao in opcoes %}
                 {% if opcao.refeicao == refeicao %}
                   <div class="opcao">
                     <div class="row">
-                  
+                      
                       <div class="col-md-1">
                         <img width="100%" src="{{opcao.imagem.url}}"> 
                       </div>
-                          
+                      
                       <div class="col-md-10">
                         {{opcao.descricao}}
                       </div>
-
+                      
                       <!-- Botão "Excluir Opção" -->
                       <div class="col-md-1">
                         <a href="{% url 'excluir_opcao' opcao.id %}" class="btn btn-danger">Excluir</a>
@@ -88,14 +87,13 @@
               {% endfor %}
             </div>
             
+          </div>
         </div>
-      </div>
-    {% endfor %}
-  {% else %}
-  <br>
-  <br>
-    <label>Esse paciente ainda não possui plano de alimentação, cadastre uma nova refeição!</label>
-  {% endif %}
+      {% endfor %}
+    {% else %}
+      <label>Esse paciente ainda não possui plano de alimentação, cadastre uma nova refeição!</label>
+    {% endif %}
+  </div>
 
   <!-- Modal "Nova Refeição" -->
   <div class="modal fade" id="novaRefeicaoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -212,26 +210,5 @@
       </div>
     </div>
   </div>
-
-
-  <script>
-
-    function exibe_refeicao(){
-      const form_refeicao = document.getElementById('form-refeicao')
-      const form_opcao = document.getElementById('form-opcao')
-
-      form_refeicao.style.display = "block"
-      form_opcao.style.display = "none"
-    }
-
-    function exibe_opcao(){
-      const form_refeicao = document.getElementById('form-refeicao')
-      const form_opcao = document.getElementById('form-opcao')
-
-      form_refeicao.style.display = "none"
-      form_opcao.style.display = "block"
-    }
-
-  </script>
 
 {% endblock%}
