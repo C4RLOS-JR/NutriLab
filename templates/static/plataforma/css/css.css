@@ -32,6 +32,10 @@
   text-decoration: none;
 }
 
+.foto-perfil {
+  text-align: center;
+}
+
 .dados {
   font-weight: bold;
   text-align: center;

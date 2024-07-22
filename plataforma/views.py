@@ -58,6 +58,7 @@ def alterar_paciente(request, paciente_id):
     return redirect('/lista_pacientes')
   
   if request.method == 'GET':
+    pass
     
 
 

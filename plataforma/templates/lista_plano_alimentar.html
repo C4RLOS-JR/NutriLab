@@ -14,10 +14,11 @@
   <br>
 	<h1 class="titulo">Plano alimentar</h1>
   <h5 class="titulo">Selecione um paciente:</h1>
-    
+  
+  <!--Cards Pacientes-->
   <div  class="row">
     {% for paciente in pacientes%}
-      <div class="col-md-3">
+      <div class="col-md-2">
         <a href="{% url 'plano_alimentar' paciente.id %}" class="link-hover">
           <div class="card-paciente">
             <div class="foto-perfil">

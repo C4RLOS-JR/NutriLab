@@ -14,10 +14,11 @@
   <br>
   <h1 class="titulo">Dados do paciente</h1>
   <h5 class="titulo">Selecione um paciente:</h1>
-    
+  
+  <!--Cards Pacientes-->
   <div  class="row">
     {% for paciente in pacientes%}
-      <div class="col-md-3">
+      <div class="col-md-2">
         <a href="{% url 'dados_paciente' paciente.id %}" class="link-hover">
           <div class="card-paciente">
             <div class="foto-perfil">

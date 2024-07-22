@@ -26,7 +26,7 @@
   <div  class="row">
     {% if pacientes %}
       {% for paciente in pacientes %}
-        <div class="col-md-3">
+        <div class="col-md-2">
           <card class="link-hover">
             <div class="card-paciente">
               <div class="foto-perfil">
@@ -44,7 +44,9 @@
               </div>
 
               <div>
-                <a href="#" class="btn btn-outline-primary">Alterar</a>
+                <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#alterarPaciente">
+                  Alterar
+                </button>
                 <a href="#" class="btn btn-outline-danger">Excluir</a>
               </div>
             </div>
@@ -111,5 +113,61 @@
     </div>
   </div>
   
+  <!--Modal "Alterar Paciente"-->
+  <div class="modal fade" id="alterarPaciente" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title titulo" id="exampleModalLabel">Alterar paciente</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+          
+        <div class="modal-body">
+          <form action="{% url 'gerenciar_pacientes' %}" method="POST"> {% csrf_token %}
+            <div class="row">
+              <div class="col-md-3">
+                <img src="{% static 'plataforma/img/perfil2.png' %}">
+              </div>
+
+              <div class="col-md-9">
+                <label>Nome:</label>
+                <input type="text" placeholder="{{paciente.nome}}" class="form-control" name="nome">
+              </div>
+            </div>
+
+            <br>
+            <label>Sexo:</label>
+            <select name="sexo" class="form-control">
+              <option value="M">Masculino</option>
+              <option value="F">Feminino</option>
+            </select>
+
+            <br>
+
+            <label>Idade:</label>
+            <input type="number" placeholder="0" class="form-control" name="idade">
+            
+            <br>
+            
+            <label>E-mail:</label>
+            <input type="email" placeholder="exemple@email.com" class="form-control" name="email">   
+
+            <br>
+            
+            <label>Telefone:</label>
+            <input type="text" placeholder="+55 (00) 00000-0000" class="form-control" name="telefone">
+            <br>
+            <input type="submit" class="btn btn-success btn-lg" value="Alterar">
+          
+          </form>
+
+
+        </div>
+      
+      </div>
+    </div>
+  </div>
 
 {% endblock%}
