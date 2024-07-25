@@ -39,7 +39,7 @@ def gerenciar_pacientes(request):
         nome = nome,
         sexo = sexo,
         idade = idade,
-        email = email,
+        email = email.lower(),
         telefone = telefone,
         nutri = request.user
       )
@@ -55,34 +55,43 @@ def alterar_paciente(request):
   nome = request.POST.get('nome')
   sexo = request.POST.get('sexo')
   idade = request.POST.get('idade')
-  email = request.POST.get('email')
+  email = request.POST.get('email').lower()
   telefone = request.POST.get('telefone')
 
-  paciente = get_object_or_404(Pacientes, id=id)
+  alterar_paciente = get_object_or_404(Pacientes, id=id)
+  if not alterar_paciente.nutri == request.user:
+    messages.add_message(request, constants.ERROR, 'Esse paciente não é seu!')
+    return redirect('/gerenciar_pacientes')
+  
+  existem_pacientes = Pacientes.objects.filter(email=email)
+  if existem_pacientes:
+    for paciente in existem_pacientes:
+      if paciente.id != alterar_paciente.id:
+        messages.add_message(request, constants.ERROR, 'Já existe um paciente com esse email cadastrado no sistema!')
+        return redirect('/gerenciar_pacientes')
+  
+  
+  alterar_paciente.nome = nome
+  alterar_paciente.sexo = sexo
+  alterar_paciente.idade = idade
+  alterar_paciente.email = email
+  alterar_paciente.telefone = telefone
+  alterar_paciente.save()
+  
+  messages.add_message(request, constants.SUCCESS, f'Dados de "{nome}" foram alterados com sucesso!')
+  return redirect('/gerenciar_pacientes')     
+  
+def excluir_paciente(request):
+  id = request.POST.get('id')
+  paciente = Pacientes.objects.get(id=id)
+
   if not paciente.nutri == request.user:
     messages.add_message(request, constants.ERROR, 'Esse paciente não é seu!')
     return redirect('/gerenciar_pacientes')
   
-  paciente_existe = Pacientes.objects.filter(email=email)
-  if paciente_existe:
-    messages.add_message(request, constants.ERROR, 'Já existe um paciente com esse email cadastrado no sistema!')
-    return redirect('/gerenciar_pacientes')
-  
-  paciente.nome = nome
-  paciente.sexo = sexo
-  paciente.idade = idade
-  paciente.email = email
-  paciente.telefone = telefone
-  paciente.save()
-  
-  return redirect('/gerenciar_pacientes')     
-  
-def excluir_paciente(request):
-  pass
-
-    
-
-
+  paciente.delete()
+  messages.add_message(request, constants.SUCCESS, 'Paciente excluido com sucesso!')
+  return redirect('/gerenciar_pacientes')
 
 @login_required(login_url='/auth/logar')
 def lista_dados_paciente(request):
