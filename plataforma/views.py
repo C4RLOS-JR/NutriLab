@@ -50,15 +50,36 @@ def gerenciar_pacientes(request):
 
     return redirect('/gerenciar_pacientes')
   
-def alterar_paciente(request, paciente_id):
-  paciente = get_object_or_404(Pacientes, id=paciente_id)
+def alterar_paciente(request):
+  id = request.POST.get('id')
+  nome = request.POST.get('nome')
+  sexo = request.POST.get('sexo')
+  idade = request.POST.get('idade')
+  email = request.POST.get('email')
+  telefone = request.POST.get('telefone')
 
+  paciente = get_object_or_404(Pacientes, id=id)
   if not paciente.nutri == request.user:
     messages.add_message(request, constants.ERROR, 'Esse paciente não é seu!')
-    return redirect('/lista_pacientes')
+    return redirect('/gerenciar_pacientes')
   
-  if request.method == 'GET':
-    pass
+  paciente_existe = Pacientes.objects.filter(email=email)
+  if paciente_existe:
+    messages.add_message(request, constants.ERROR, 'Já existe um paciente com esse email cadastrado no sistema!')
+    return redirect('/gerenciar_pacientes')
+  
+  paciente.nome = nome
+  paciente.sexo = sexo
+  paciente.idade = idade
+  paciente.email = email
+  paciente.telefone = telefone
+  paciente.save()
+  
+  return redirect('/gerenciar_pacientes')     
+  
+def excluir_paciente(request):
+  pass
+
     
 
 
@@ -75,7 +96,7 @@ def dados_paciente(request, paciente_id):
 
   if not paciente.nutri == request.user:
     messages.add_message(request, constants.ERROR, 'Esse paciente não é seu!')
-    return redirect('/lista_pacientes')
+    return redirect('/lista_dados_paciente')
   
   if request.method == 'GET':
     dados = DadosPaciente.objects.filter(paciente=paciente)
