@@ -57,7 +57,7 @@
               <span> - </span>
               <span>{{refeicao.horario}}</span>
               
-              <!-- Botão "Excluir Refeição" -->
+              <!-- Botão "Excluir Refeição" (js) -->
               <button style="float: right; color: black;" type="button" class="close" data-toggle="modal" data-target="#excluirRefeicao" data-id="{{refeicao.id}}">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -77,7 +77,7 @@
                         {{opcao.descricao}}
                       </div>
                       
-                      <!-- Botão "Excluir Opção" -->
+                      <!-- Botão "Excluir Opção" (js) -->
                       <div style="text-align: right; padding-right: 15px;" class="col-md-2">
                         <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#excluirOpcao" data-id="{{opcao.id}}">
                           Excluir
@@ -255,24 +255,27 @@
     </div>
   </div>
 
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
   <script>
-    $('#excluirOpcao').on('show.bs.modal', function (event) {
-      var button = $(event.relatedTarget) // Botão que acionou o modal
-      var id = button.data('id') // Extrair informações de atributos data-*
-
-      var modal = $(this)
-      modal.find('.modal-title').text('Deseja excluir essa opção?')
-      modal.find('#id_opcao').val(id)
-    })
-
-    $('#excluirRefeicao').on('show.bs.modal', function (event) {
-      var button = $(event.relatedTarget) // Botão que acionou o modal
-      var id = button.data('id') // Extrair informações de atributos data-*
-
-      var modal = $(this)
-      modal.find('.modal-title').text('Deseja excluir essa refeição?')
-      modal.find('#id_refeicao').val(id)
-    })
+    
+    const container = document.getElementById('pdf-container');
+    
+    pdfjsLib.getDocument("{% url 'proxy_pdf' exame.id %}").promise.then(pdf => {
+      pdf.getPage(1).then(page => {
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        const viewport = page.getViewport({ scale: 0.6 });
+        
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        
+        page.render({ canvasContext: context, viewport }).promise.then(() => {
+          container.appendChild(canvas);
+        });
+      });
+    });
   </script>
+
 
 {% endblock%}
