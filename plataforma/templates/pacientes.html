@@ -1,6 +1,8 @@
 {% extends 'base_plataforma.html' %}
 {% load static %}
 
+{% block 'titulo' %}Gerenciar Pacientes{% endblock  %}
+
 {% block 'plataforma' %}
   <br>
   <h1 class="titulo">Seus pacientes</h1>
@@ -45,10 +47,12 @@
               </div>
 
               <div>
+                <!--Botão Modal "Alterar Paciente"-->
                 <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#alterarPaciente" data-id="{{paciente.id}}" data-nome="{{paciente.nome}}" data-sexo="{{paciente.sexo}}" data-idade="{{paciente.idade}}" data-email="{{paciente.email}}" data-telefone="{{paciente.telefone}}">
                   Alterar
                 </button>
-
+                
+                <!--Botão Modal "Excluir Paciente"-->
                 <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#excluirPaciente" data-id="{{paciente.id}}" data-nome="{{paciente.nome}}">
                   Excluir
                 </button>
@@ -59,85 +63,6 @@
         </div>
       {% endfor %}
     {% endif %}
-  </div>
-
-  <!-- Modal Excluir -->
-  <div class="modal fade" id="excluirPaciente" tabindex="-1" role="dialog" aria-labelledby="excluirPaciente" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title"></h5>
-        </div>
-        
-        <div class="modal-footer">
-          <form action="{% url 'excluir_paciente' %}" method="POST"> {% csrf_token %}
-            <input type="hidden" id="id_paciente" name="id">
-            
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-            <input type="submit" class="btn btn-danger" value="Confirmar">
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-
-
-
-
-
-
-
-<!--Modal "Alterar Paciente"-->
-  <div class="modal fade" id="alterarPaciente" tabindex="-1" role="dialog" aria-labelledby="alterarPaciente" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-
-        <div class="modal-header">
-            <h1 class="modal-title titulo" id="alterarPaciente"></h1>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-          
-        <div class="modal-body">
-          <form action="{% url 'alterar_paciente' %}" method="POST"> {% csrf_token %}
-
-            <input type="hidden" id="id_paciente" name="id">
-            
-            <label>Nome:</label>
-            <input type="text" class="form-control" id="nome_paciente" name="nome">
-            <br>
-            {{nome_paciente}}
-
-            <label>Sexo:</label>
-            <select name="sexo" class="form-control" id="sexo_paciente">
-              <option value="M">Masculino</option>
-              <option value="F">Feminino</option>
-            </select>
-            <br>
-
-            <label>Idade:</label>
-            <input type="number" class="form-control" id="idade_paciente" name="idade">
-            <br>
-            
-            <label>E-mail:</label>
-            <input type="email" class="form-control" id="email_paciente" name="email">
-            <br>
-            
-            <label>Telefone:</label>
-            <input type="text" class="form-control" id="telefone_paciente" name="telefone">
-            <br>
-
-            <input type="submit" class="btn btn-success btn-lg" value="Alterar">
-          
-            <button class="btn btn-secondary btn-lg" data-dismiss="modal">Cancelar</button>
-          </form>
-        </div>
-
-      </div>
-    </div>
   </div>
 
   <!--Modal "Novo Paciente"-->
@@ -190,6 +115,77 @@
           </form>
         </div>
 
+      </div>
+    </div>
+  </div>
+
+  <!--Modal "Alterar Paciente"-->
+  <div class="modal fade" id="alterarPaciente" tabindex="-1" role="dialog" aria-labelledby="alterarPaciente" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+
+        <div class="modal-header">
+            <h1 class="modal-title titulo" id="alterarPaciente"></h1>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+          
+        <div class="modal-body">
+          <form action="{% url 'alterar_paciente' %}" method="POST"> {% csrf_token %}
+
+            <input type="hidden" id="id_paciente" name="id">
+            
+            <label>Nome:</label>
+            <input type="text" class="form-control" id="nome_paciente" name="nome">
+            <br>
+            {{nome_paciente}}
+
+            <label>Sexo:</label>
+            <select name="sexo" class="form-control" id="sexo_paciente">
+              <option value="M">Masculino</option>
+              <option value="F">Feminino</option>
+            </select>
+            <br>
+
+            <label>Idade:</label>
+            <input type="number" class="form-control" id="idade_paciente" name="idade">
+            <br>
+            
+            <label>E-mail:</label>
+            <input type="email" class="form-control" id="email_paciente" name="email">
+            <br>
+            
+            <label>Telefone:</label>
+            <input type="text" class="form-control" id="telefone_paciente" name="telefone">
+            <br>
+
+            <input type="submit" class="btn btn-success btn-lg" value="Alterar">
+          
+            <button class="btn btn-secondary btn-lg" data-dismiss="modal">Cancelar</button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal "Excluir Paciente"-->
+  <div class="modal fade" id="excluirPaciente" tabindex="-1" role="dialog" aria-labelledby="excluirPaciente" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"></h5>
+        </div>
+        
+        <div class="modal-footer">
+          <form action="{% url 'excluir_paciente' %}" method="POST"> {% csrf_token %}
+            <input type="hidden" id="id_paciente" name="id">
+            
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <input type="submit" class="btn btn-danger" value="Confirmar">
+          </form>
+        </div>
       </div>
     </div>
   </div>

@@ -184,7 +184,6 @@ def plano_alimentar(request, paciente_id):
     
     return render(request, 'plano_alimentar.html', {'paciente': paciente, 'refeicoes': refeicoes, 'opcoes': opcoes})
 
-
 def refeicao(request, paciente_id):
   paciente = get_object_or_404(Pacientes, id=paciente_id)
   if not paciente.nutri == request.user:
@@ -213,19 +212,16 @@ def refeicao(request, paciente_id):
       messages.add_message(request, constants.ERROR, 'Algo deu errado, tente novamente ou entre em contato com a administração!')
 
     return redirect(f'/plano_alimentar/{paciente_id}')
-  
 
+def excluir_refeicao(request):
+  refeicao_id = request.POST.get('id')
+  refeicao = get_object_or_404(Refeicao, id=refeicao_id)
 
-def excluir_refeicao(request, refeicao_id):
-  refeicao = Refeicao.objects.get(id=refeicao_id)
-
-  if not refeicao.paciente.nutri == request.user:
-    return redirect(f'/plano_alimentar/{refeicao.paciente_id}')
-  refeicao.delete()
-
+  if refeicao.paciente.nutri == request.user:
+    refeicao.delete()
+    messages.add_message(request, constants.SUCCESS, f'Refeição "{refeicao.titulo}" foi excluida com sucesso!')
   return redirect(f'/plano_alimentar/{refeicao.paciente_id}')
 
-  
 def opcao(request, paciente_id):
   paciente = get_object_or_404(Pacientes, id=paciente_id)
   if not paciente.nutri == request.user:
@@ -252,16 +248,15 @@ def opcao(request, paciente_id):
       messages.add_message(request, constants.ERROR, 'Algo deu errado, tente novamente ou entre em contato com a administração!')
 
     return redirect(f'/plano_alimentar/{paciente_id}')
-  
-def excluir_opcao(request, opcao_id):
-  opcao = Opcao.objects.get(id=opcao_id)
 
-  if not opcao.refeicao.paciente.nutri == request.user:
-    return redirect(f'/plano_alimentar/{opcao.refeicao.paciente_id}')
-  
-  # Deleta a imagem(se não for a "Default.png").
-  if not opcao.imagem == ("default/Default.png"):
-    opcao.imagem.delete()
-  opcao.delete()
+def excluir_opcao(request):
+  opcao_id = request.POST.get('id')
+  opcao = get_object_or_404(Opcao, id=opcao_id)
+
+  if opcao.refeicao.paciente.nutri == request.user:  
+    if not opcao.imagem == ("default/Default.png"): # Deleta a imagem(se não for a "Default.png").
+      opcao.imagem.delete()
+    opcao.delete()
+    messages.add_message(request, constants.SUCCESS, 'Opção excluida com sucesso!')
 
   return redirect(f'/plano_alimentar/{opcao.refeicao.paciente_id}')
